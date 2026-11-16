@@ -182,6 +182,7 @@
             cursor: pointer;
             border: none;
             width: 100%;
+            display: block; /* Aseguramos que el enlace se comporte como bloque */
         }
 
         .btn-plan:hover {
@@ -313,7 +314,7 @@
                     <li>Carrito de compras</li>
                     <li>Soporte prioritario</li>
                 </ul>
-                <button onclick="agregarAlCarrito()" class="btn-plan">Añadir al Carrito / Comprar</button>
+                <a href="https://wa.me/56957351607?text=Hola,%20quiero%20el%20Plan%20Full%20de%20Tekvion" target="_blank" class="btn-plan">Contratar Full</a>
             </div>
 
         </div>
@@ -340,17 +341,5 @@
         <p>&copy; 2026 Tekvion. Todos los derechos reservados. Diseños profesionales para tu negocio.</p>
     </footer>
 
-    <!-- JavaScript para simular el Carrito (Plan Full) -->
-    <script>
-        function agregarAlCarrito() {
-            // Aquí es donde Diego conectaría el código real del carrito (Stripe, PayPal, etc.)
-            let confirmacion = confirm("¡Excelente elección! Has añadido el Plan Full ($99) al carrito.\n\n(Nota: En la página real, esto abrirá la pasarela de pago o el carrito funcional).\n\n¿Deseas proceder a pagar ahora?");
-            
-            if (confirmacion) {
-                alert("Redirigiendo a la pasarela de pago seguro... (Simulación de código de carrito)");
-                // window.location.href = "URL_DE_TU_PASARELA_DE_PAGO";
-            }
-        }
-    </script>
 </body>
 </html>
