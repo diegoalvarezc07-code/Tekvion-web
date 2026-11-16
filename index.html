@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tekvion | Landing Pages Profesionales</title>
+    <style>
+        /* Variables de color basadas en el logo de Tekvion */
+        :root {
+            --azul-oscuro: #0b2545;
+            --naranja: #ff6b00;
+            --azul-claro: #4a7c9d;
+            --blanco: #ffffff;
+            --gris-fondo: #f4f7f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gris-fondo);
+            color: var(--azul-oscuro);
+            line-height: 1.6;
+        }
+
+        /* Navegación */
+        header {
+            background-color: var(--blanco);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container img {
+            height: 60px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--azul-oscuro);
+            font-weight: bold;
+            margin-left: 20px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--naranja);
+        }
+
+        /* Sección Hero (Principal) */
+        .hero {
+            background: linear-gradient(135deg, var(--azul-oscuro), var(--azul-claro));
+            color: var(--blanco);
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-principal {
+            background-color: var(--naranja);
+            color: var(--blanco);
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background 0.3s;
+            display: inline-block;
+        }
+
+        .btn-principal:hover {
+            background-color: #e65c00;
+        }
+
+        /* Sección de Precios */
+        .precios {
+            padding: 5rem 5%;
+            text-align: center;
+        }
+
+        .precios h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .planes-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .plan-card {
+            background-color: var(--blanco);
+            border-radius: 10px;
+            padding: 2rem;
+            width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--azul-claro);
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .plan-card.destacado {
+            border-top: 5px solid var(--naranja);
+            transform: scale(1.05);
+        }
+
+        .plan-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .precio {
+            font-size: 2.5rem;
+            color: var(--naranja);
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .precio span {
+            font-size: 1rem;
+            color: var(--azul-oscuro);
+        }
+
+        .plan-card ul {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .plan-card ul li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .plan-card ul li::before {
+            content: "✓";
+            color: var(--naranja);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .btn-plan {
+            background-color: var(--azul-oscuro);
+            color: var(--blanco);
+            padding: 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            transition: background 0.3s;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
+
+        .btn-plan:hover {
+            background-color: var(--naranja);
+        }
+
+        /* Sección de Contacto */
+        .contacto {
+            background-color: var(--azul-oscuro);
+            color: var(--blanco);
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .contacto h2 {
+            margin-bottom: 2rem;
+        }
+
+        .info-contacto {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .info-contacto div {
+            font-size: 1.2rem;
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: var(--blanco);
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+            transition: transform 0.3s;
+        }
+
+        .btn-whatsapp:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #06152a;
+            color: var(--blanco);
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .plan-card.destacado { transform: scale(1); }
+            .info-contacto { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <!-- Asegúrate de tener tu logo guardado como logo.png en la misma carpeta -->
+            <img src="logo.png" alt="Tekvion Logo">
+        </div>
+        <nav>
+            <a href="#servicios">Servicios</a>
+            <a href="#precios">Planes</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="servicios">
+        <h1>Potencia tu Negocio con Landing Pages Profesionales</h1>
+        <p>En Tekvion creamos sitios web ultrarrápidos, optimizados y diseñados estratégicamente para convertir visitantes en clientes. Conecta todos tus sitios con nosotros.</p>
+        <a href="#precios" class="btn-principal">Ver Planes</a>
+    </section>
+
+    <!-- Sección de Precios -->
+    <section class="precios" id="precios">
+        <h2>Elige el Plan Perfecto para Ti</h2>
+        <div class="planes-container">
+            
+            <!-- Plan Básico -->
+            <div class="plan-card">
+                <h3>Plan Básico</h3>
+                <div class="precio">$49 <span>USD</span></div>
+                <ul>
+                    <li>Información básica de tu negocio</li>
+                    <li>Diseño responsivo (móvil y PC)</li>
+                    <li>Botón de contacto directo a WhatsApp</li>
+                    <li>Optimización básica</li>
+                </ul>
+                <a href="https://wa.me/56957351607?text=Hola,%20quiero%20el%20Plan%20Básico%20de%20Tekvion" target="_blank" class="btn-plan">Contratar Básico</a>
+            </div>
+
+            <!-- Plan Intermedio -->
+            <div class="plan-card destacado">
+                <h3>Plan Intermedio</h3>
+                <div class="precio">$79 <span>USD</span></div>
+                <ul>
+                    <li><strong>Todo lo del Plan Básico</strong></li>
+                    <li>Catálogo de productos incluidos</li>
+                    <li>Sección para consultar y comprar</li>
+                    <li>Diseño personalizado de productos</li>
+                    <li>Mayor velocidad de carga</li>
+                </ul>
+                <a href="https://wa.me/56957351607?text=Hola,%20quiero%20el%20Plan%20Intermedio%20de%20Tekvion" target="_blank" class="btn-plan">Contratar Intermedio</a>
+            </div>
+
+            <!-- Plan Full -->
+            <div class="plan-card">
+                <h3>Plan Full</h3>
+                <div class="precio">$99 <span>USD</span></div>
+                <ul>
+                    <li><strong>Todo lo de los planes anteriores</strong></li>
+                    <li>Mapa de ubicación interactivo</li>
+                    <li>Número de teléfono destacado</li>
+                    <li>Carrito de compras</li>
+                    <li>Soporte prioritario</li>
+                </ul>
+                <button onclick="agregarAlCarrito()" class="btn-plan">Añadir al Carrito / Comprar</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Sección de Contacto -->
+    <section class="contacto" id="contacto">
+        <h2>¿Listo para despegar?</h2>
+        
+        <div class="info-contacto">
+            <div>📞 <strong>Teléfono:</strong> +56 9 5735 1607</div>
+            <div>📧 <strong>Email:</strong> hola@tekvion.cl</div>
+        </div>
+
+        <!-- Botón de WhatsApp -->
+        <a href="https://wa.me/56957351607?text=Hola%20Diego,%20tengo%20una%20pregunta%20sobre%20Tekvion" target="_blank" class="btn-whatsapp">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12.031 0C5.385 0 0 5.385 0 12.031c0 2.128.554 4.195 1.6 6.015L.066 24l6.127-1.608A11.96 11.96 0 0 0 12.03 24c6.646 0 12.032-5.385 12.032-12.031S18.677 0 12.031 0zm6.54 17.01c-.273.768-1.57 1.505-2.176 1.556-.607.05-1.179.235-3.413-.733-2.682-1.165-4.378-4.034-4.508-4.218-.13-.183-1.072-1.48-1.072-2.823 0-1.343.705-2.004.955-2.277.25-.272.545-.34.727-.34.18 0 .363.002.52.01.166.008.39-.063.61.462.226.537.768 1.867.835 2.004.067.136.11.295.022.478-.088.183-.132.297-.264.458-.132.16-.278.358-.397.48-.133.135-.27.282-.12.54.15.258.667 1.1 1.43 1.782.982.874 1.81 1.145 2.068 1.273.258.128.408.107.558-.067.15-.174.642-.748.813-1.005.17-.257.34-.214.57-.128.23.086 1.456.687 1.706.812.25.125.416.187.478.294.062.107.062.62-.21 1.388z"/></svg>
+            Escríbenos por WhatsApp
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Tekvion. Todos los derechos reservados. Diseños profesionales para tu negocio.</p>
+    </footer>
+
+    <!-- JavaScript para simular el Carrito (Plan Full) -->
+    <script>
+        function agregarAlCarrito() {
+            // Aquí es donde Diego conectaría el código real del carrito (Stripe, PayPal, etc.)
+            let confirmacion = confirm("¡Excelente elección! Has añadido el Plan Full ($99) al carrito.\n\n(Nota: En la página real, esto abrirá la pasarela de pago o el carrito funcional).\n\n¿Deseas proceder a pagar ahora?");
+            
+            if (confirmacion) {
+                alert("Redirigiendo a la pasarela de pago seguro... (Simulación de código de carrito)");
+                // window.location.href = "URL_DE_TU_PASARELA_DE_PAGO";
+            }
+        }
+    </script>
+</body>
+</html>
