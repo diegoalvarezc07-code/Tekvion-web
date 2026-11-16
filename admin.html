@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tekvion | Panel de Administración</title>
+    <style>
+        :root {
+            --azul-oscuro: #0b2545;
+            --naranja: #ff6b00;
+            --azul-claro: #4a7c9d;
+            --blanco: #ffffff;
+            --gris-fondo: #f4f7f6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--gris-fondo); color: var(--azul-oscuro); }
+        
+        /* Login Screen */
+        .login-container {
+            display: flex; justify-content: center; align-items: center; height: 100vh;
+        }
+        .login-box {
+            background: var(--blanco); padding: 2rem; border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 300px;
+        }
+        .login-box input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        .login-box button {
+            width: 100%; padding: 10px; background: var(--naranja); color: white;
+            border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
+        }
+
+        /* Dashboard */
+        .dashboard { display: none; } /* Oculto hasta que inicie sesión */
+        header { background: var(--azul-oscuro); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .container { padding: 2rem; max-width: 1200px; margin: auto; }
+        
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid var(--naranja); }
+        .stat-card h3 { font-size: 1rem; color: #666; margin-bottom: 0.5rem; }
+        .stat-card p { font-size: 2rem; font-weight: bold; color: var(--azul-oscuro); }
+
+        /* Table */
+        .orders-table { width: 100%; background: white; border-collapse: collapse; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .orders-table th, .orders-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #eee; }
+        .orders-table th { background: var(--azul-claro); color: white; }
+        
+        .status { padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+        .status.pendiente { background: #ffeaa7; color: #d63031; }
+        .status.proceso { background: #74b9ff; color: #0984e3; }
+        .status.completado { background: #55efc4; color: #00b894; }
+
+        .btn-status { padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; margin-right: 5px; font-size: 0.8rem; }
+        .btn-proceso { background: #74b9ff; color: white; }
+        .btn-completado { background: #55efc4; color: #0b2545; }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla de Login -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box">
+            <h2>Tekvion Admin</h2>
+            <p>Ingresa tus credenciales</p>
+            <input type="email" id="email" placeholder="Correo (admin@tekvion.cl)">
+            <input type="password" id="password" placeholder="Contraseña">
+            <button onclick="login()">Ingresar</button>
+        </div>
+    </div>
+
+    <!-- Panel de Administración -->
+    <div class="dashboard" id="dashboardScreen">
+        <header>
+            <h2>Tekvion Dashboard</h2>
+            <button onclick="logout()" style="background:var(--naranja); color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">Cerrar Sesión</button>
+        </header>
+        
+        <div class="container">
+            <!-- Estadísticas -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Pedidos Totales</h3>
+                    <p id="totalOrders">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Ingresos Estimados</h3>
+                    <p id="totalRevenue">$0 USD</p>
+                </div>
+                <div class="stat-card">
+                    <h3>En Proceso</h3>
+                    <p id="ordersInProcess">0</p>
+                </div>
+            </div>
+
+            <!-- Tabla de Pedidos -->
+            <h3 style="margin-bottom: 1rem;">Últimos Pedidos</h3>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Plan</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersBody">
+                    <!-- Los pedidos se cargarán aquí desde Firebase -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Base de datos en tiempo real) -->
+    <script type="module">
+        // 1. Importar Firebase (Aquí conectarás tu cuenta)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+        // 2. CONFIGURACIÓN DE FIREBASE (DEBES CREAR TU PROYECTO EN FIREBASE Y PEGAR TUS DATOS AQUÍ)
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "tekvion-admin.firebaseapp.com",
+            projectId: "tekvion-admin",
+            storageBucket: "tekvion-admin.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- LÓGICA DE LOGIN ---
+        window.login = function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => { console.log("Login exitoso"); })
+                .catch((error) => { alert("Error: " + error.message); });
+        };
+
+        window.logout = function() {
+            signOut(auth);
+        };
+
+        // Controlar si el usuario está logueado
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboardScreen').style.display = 'block';
+                cargarPedidos();
+            } else {
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('dashboardScreen').style.display = 'none';
+            }
+        });
+
+        // --- CARGAR PEDIDOS (BASE DE DATOS) ---
+        function cargarPedidos() {
+            const ordersRef = collection(db, "pedidos");
+            
+            // onSnapshot escucha los cambios en tiempo real
+            onSnapshot(ordersRef, (snapshot) => {
+                const tbody = document.getElementById('ordersBody');
+                tbody.innerHTML = '';
+                let total = 0;
+                let enProceso = 0;
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const id = doc.id;
+                    total += data.monto;
+                    if(data.estado === 'En Proceso') enProceso++;
+
+                    // Formatear el estado para CSS
+                    let statusClass = 'pendiente';
+                    if(data.estado === 'En Proceso') statusClass = 'proceso';
+                    if(data.estado === 'Completado') statusClass = 'completado';
+
+                    const row = `
+                        <tr>
+                            <td>${data.cliente} <br><small>${data.email}</small></td>
+                            <td>${data.plan}</td>
+                            <td>$${data.monto}</td>
+                            <td><span class="status ${statusClass}">${data.estado}</span></td>
+                            <td>
+                                <button class="btn-status btn-proceso" onclick="cambiarEstado('${id}', 'En Proceso')">A Proceso</button>
+                                <button class="btn-status btn-completado" onclick="cambiarEstado('${id}', 'Completado')">Completar</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+
+                // Actualizar estadísticas
+                document.getElementById('totalOrders').innerText = snapshot.size;
+                document.getElementById('totalRevenue').innerText = `$${total} USD`;
+                document.getElementById('ordersInProcess').innerText = enProceso;
+            });
+        }
+
+        // --- ACTUALIZAR ESTADO DEL PEDIDO ---
+        window.cambiarEstado = async function(orderId, nuevoEstado) {
+            try {
+                const orderRef = doc(db, "pedidos", orderId);
+                await updateDoc(orderRef, { estado: nuevoEstado });
+                alert(`Pedido actualizado a: ${nuevoEstado}`);
+            } catch (error) {
+                console.error("Error actualizando: ", error);
+            }
+        };
+    </script>
+</body>
+</html>
